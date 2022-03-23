@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+          #navbar {
+        border: solid blue 1px;
+        height: 30px;
+        background-color: #0a1d47;
+        
+      }
+      #navbar>ul{
+        display: flex;
+        list-style-type: none;
+        justify-content:space-evenly;
+        margin-top: 0px;
+        /* line-height: 0; */
+        color: white;
+        font-size: 20px;
+      }
+      .active,.nav_comp:hover{
+        border-bottom: 2px solid rgb(189, 13, 13);
+        /* padding: 5px; */
+      }
+
+
+    </style>
+</head>
+<body>
+    <div id="navbar">
+
+        <ul>
+          <li class="nav_comp active">nav</li>
+          <li class="nav_comp">nav</li>
+          <li class="nav_comp">nav</li>
+          <li class="nav_comp">nav</li>
+          <li class="nav_comp">nav</li>
+          <li class="nav_comp">nav</li>
+          <li class="nav_comp">nav</li>
+        </ul>
+      </div>
+</body>
+</html>
+
+<script>
+
+    let navbar=document.getElementById("navbar");
+
+    let nav_comp=document.getElementsByClassName("nav_comp");
+
+    for(let i=0;i<nav_comp.length;i++){
+        nav_comp[i].addEventListener("click",function(){
+            let active=document.getElementsByClassName("active");
+            active[0].className=active[0].className.replace(" active", "");
+
+            this.className+=" active";
+        })
+    }
+</script>

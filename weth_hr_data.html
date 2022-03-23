@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="header.css" />
+
+    <style>
+      table {
+        width: 100%;
+      }
+      #data_table > tr {
+        text-align: center;
+      }
+      th,
+      td {
+        border-bottom: 1px solid black;
+        text-align: center;
+      }
+      #city_tag{
+
+        border-bottom: black solid 3px;
+      }
+      #city_tag p{
+
+        font-size: 20px;
+        text-align:center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cover">
+      <div id="header"></div>
+
+      <div id="hrs_data_div">
+       <div id="city_tag">
+
+       </div>
+        <table id="data_table">
+          
+        </table>
+        
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+    let url=`https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=062530852ea2137ad5214606ed2b0e59&units=metric`
+
+    
+
+  function change_url() {
+    let city = document.getElementById("city").value;
+    if (city) {
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=062530852ea2137ad5214606ed2b0e59&units=metric`;
+
+    } else {
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=062530852ea2137ad5214606ed2b0e59&units=metric`;
+    }
+  }
+
+  async function get_data() {
+    let responce = await fetch(url);
+
+    let data = await responce.json();
+
+    console.log(data);
+    append_temp(data)
+    tag_city(data)
+    display_hrs_data1(data.list);
+
+
+  }
+
+  get_data();
+
+  function display_hrs_data1(arr) {
+    let data_table = document.getElementById("data_table");
+    data_table.innerText = null;
+
+    let tr=document.createElement("tr");
+    tr.style.color="black"
+    tr.style.fontWeight="800"
+
+    let td1=document.createElement("td");
+    td1.innerText="Date / Time"
+    let td2=document.createElement("td");
+    td2.innerText="------"
+    let td3=document.createElement("td");
+    td3.innerText="Min-Max"
+    let td4=document.createElement("td");
+    td4.innerText="Wether Condition"
+
+    tr.append(td1,td2,td3,td4);
+    data_table.append(tr);
+
+    arr.forEach(function (element) {
+      let tr = document.createElement("tr");
+
+      let td1 = document.createElement("td");
+      let date = document.createElement("p");
+      date.innerText = element.dt_txt;
+      td1.append(date);
+
+      let td2 = document.createElement("td");
+      let icon = document.createElement("img");
+      icon.src = `https://openweathermap.org/img/wn/${element.weather[0].icon}@2x.png`;
+      td2.append(icon);
+
+      let td3 = document.createElement("td");
+      let temp = document.createElement("p");
+      temp.innerText = `${element.main.temp_max}°C - ${element.main.temp_min}°C `;
+      td3.append(temp);
+
+      let td4 = document.createElement("td");
+      let desc = document.createElement("p");
+      desc.innerText = element.weather[0].description;
+      td4.append(desc);
+
+      tr.append(td1, td2, td3, td4);
+
+      data_table.append(tr);
+    });
+  }
+
+  
+
+  function tag_city(data){
+
+    let city_tag =document.getElementById("city_tag");
+
+    city_tag.innerHTML=null;
+
+    let p=document.createElement("p");
+
+    p.innerText=`Hourly Weather Forecast for ${data.city.name}, ${data.city.country}`
+
+    city_tag.append(p)
+
+  }
+
+  function append_temp(data) {
+    let temp = document.getElementById("temp");
+
+    temp.innerHTML = null;
+
+    let icon = document.createElement("img");
+    icon.src = `https://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png`;
+
+    let temp_val = document.createElement("p");
+    temp_val.innerText = `${data.list[0].main.temp}°C,`;
+
+    let city_name = document.createElement("p");
+    city_name.innerText = `${data.city.name}, ${data.city.country}`;
+
+    temp.append(icon, temp_val, city_name);
+  }
+</script>
+
+
+
+<script type="module">
+  import header from "./weth_head.js";
+
+  let headerDiv = document.getElementById("header");
+
+  headerDiv.innerHTML = header();
+
+  // api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
+
+  let nav_comp = document.getElementsByClassName("nav_comp");
+  nav_comp[1].className+=" active"
+
+  
+</script>
+
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #display{
+            border: solid black 1px;
+            height: 200px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    
+    <input type="text" id="city">
+   <button onclick="change_url(),getWeather1()">Search</button>
+
+
+   <div id="display"></div>
+
+</body>
+</html>
+
+<script>
+
+  
+
+var key = "b04f4049b9a93f994a12f540c01f0844";
+
+
+var url1=`https://api.openweathermap.org/data/2.5/weather?q=pune&appid=${key}&units=metric`
+
+function change_url(){
+    let city =document.getElementById("city").value;
+    if (city){
+
+        url1=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=metric`
+    }
+    else{
+        url1=`https://api.openweathermap.org/data/2.5/weather?q=pune&appid=${key}&units=metric`
+    }
+
+   
+}
+
+async function getWeather1(){
+
+    let city =document.getElementById("city").value;
+    //for 7 days data
+    // var url = `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${key}&units=metric&cnt=7`;
+    //for 1 day data °C
+    
+    let responce = await fetch(url1)
+
+    let data = await responce.json();
+
+    console.log(data)
+    append(data)
+}
+
+getWeather1()
+
+
+
+function append(data){
+
+   let display= document.getElementById("display");
+
+   display.innerHTML=null;
+
+   let city_name=document.createElement("p");
+   city_name.innerText=data.name
+
+
+   display.append(city_name)
+   
+}
+
+
+</script>

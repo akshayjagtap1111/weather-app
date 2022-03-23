@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Document</title>
+    <link rel="stylesheet" href="werther_assign.css">
+  </head>
+  <body>
+    <div id="cover">
+      <!-- header start -->
+      <div id="header">
+        <div id="head_top">
+          <div>
+            <img
+              src="https://trapbag.com/wp-content/uploads/2020/04/Weather-Channel-Logo@2x.png"
+              alt=""
+            />
+            <p>
+              An <span style="font-weight: bolder">IBM</span> Buisness
+              <span style="font-size: 40px">|</span>
+            </p>
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSv3bULj1tUbIezFwjADJ9-h3LSx57ltF4cQyMIVjGbtoMqNTmDwNlw8ZPIKM6rMjBUQ&usqp=CAU"
+              alt=""
+              id="TOI"
+            />
+          </div>
+          <div id="search">
+            <div>
+              <input type="text" placeholder="Search" id="city" />
+              <i
+                class="fa fa-search"
+                style="font-size: 24px"
+                onclick="change_url(),get_data()"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <div id="temp"></div>
+
+        <div id="navbar">
+          <ul>
+            <li class="nav_comp active"><a href="wether_assign.html">Today</a></li>
+            <li class="nav_comp"><a href="weth_hr_data.html">Hourly</a></li>
+            <li class="nav_comp">10 Day</li>
+            <li class="nav_comp">Weekend</li>
+            <li class="nav_comp">Monthly</li>
+            <li class="nav_comp">Radar</li>
+            <li class="nav_comp">More</li>
+          </ul>
+        </div>
+      </div>
+      <!-- header ended -->
+
+      <div id="front_card"></div>
+      <div id="map">
+
+        <div class="gmap_canvas">
+          <iframe
+           id="iframe"
+            width="900"
+            height="400"
+            id="gmap_canvas"
+            src="https://maps.google.com/maps?q=pune&t=&z=13&ie=UTF8&iwloc=&output=embed"
+            frameborder="0"
+            scrolling="no"
+            marginheight="0"
+            marginwidth="0"
+
+          ></iframe>
+      </div>
+      
+    </div>
+
+    <div id="all_wether_card">
+        
+    </div>
+    <div id="footer"></div>
+  </body>
+</html>
+
+<script>
+  var key = "b04f4049b9a93f994a12f540c01f0844";
+  let url = `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${key}&units=metric&cnt=7`;
+
+  function change_url() {
+    let city = document.getElementById("city").value;
+    if (city) {
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=metric&cnt=7`;
+    } else {
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${key}&units=metric&cnt=7`;
+    }
+  }
+
+  async function get_data() {
+    let responce = await fetch(url);
+
+    let data = await responce.json();
+
+    console.log(data);
+    let data_arr = data.list;
+    console.log(data.list[0].weather[0].description);
+
+    append_temp(data);
+
+    append_front_card(data); 
+
+    createDay(data.list)
+  }
+  get_data();
+
+  function append_temp(data) {
+    let temp = document.getElementById("temp");
+
+    temp.innerHTML = null;
+
+    let icon = document.createElement("img");
+    icon.src = `https://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png`;
+
+    let temp_val = document.createElement("p");
+    temp_val.innerText = `${data.list[0].main.temp}°C,`;
+
+    let city_name = document.createElement("p");
+    city_name.innerText = `${data.city.name}, ${data.city.country}`;
+
+    temp.append(icon, temp_val, city_name);
+  }
+
+  function append_front_card(data) {
+    let front_card = document.getElementById("front_card");
+
+    front_card.innerHTML = null;
+
+    let city_name = document.createElement("p");
+    city_name.innerText = `${data.city.name}, ${data.city.country}, Weather`;
+
+    let time_zone = document.createElement("p");
+    time_zone.innerText = `${data.list[0].dt_txt} IST`;
+
+    let temp_val = document.createElement("p");
+    temp_val.innerText = `${data.list[0].main.temp}°C`;
+
+    let desc = document.createElement("p");
+    desc.innerText = `${data.list[0].weather[0].description}`;
+
+    let icon = document.createElement("img");
+    icon.src = `https://openweathermap.org/img/wn/${data.list[2].weather[0].icon}@4x.png`;
+    icon.setAttribute("id","icon")
+
+    front_card.append(city_name, time_zone, temp_val, desc,icon);
+  }
+
+
+  function createDay(data) {
+    console.log(data)
+    let wetherDiv=document.getElementById("all_wether_card")
+    wetherDiv.innerHTML = null;
+    data.forEach(function (item) {
+      console.log("inside")
+      var day = document.createElement("div");
+      day.id = "day";
+      var date = document.createElement("p");
+      date.id = "date";
+      date.textContent = `${item.dt_txt} IST`;
+      var icon = document.createElement("img");
+      icon.id = "icon";
+      icon.src = `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`;
+      var max = document.createElement("p");
+      max.textContent = `Max:${item.main.temp_max}°C`;
+      var min = document.createElement("p");
+      min.textContent = `Min:${item.main.temp_min}°C`;
+
+      day.append(date, icon, max, min);
+      wetherDiv.append(day);
+    });
+
+  }
+</script>
+
+<script>
+  let navbar = document.getElementById("navbar");
+
+  let nav_comp = document.getElementsByClassName("nav_comp");
+
+  nav_comp[0].className+=" active"
+
+  // console.log(nav_comp)
+
+  // for (let i = 0; i < nav_comp.length; i++) {
+  //   nav_comp[i].addEventListener("click", function () {
+  //     let active = document.getElementsByClassName("active");
+  //     active[0].className = active[0].className.replace(" active", "");
+
+  //     this.className += " active";
+  //   });
+  // }
+</script>
