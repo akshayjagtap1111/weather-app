@@ -33,7 +33,7 @@ function header(){
 
         <div id="navbar">
           <ul>
-            <li class="nav_comp" ><a href="wether_assign.html">Today</a></li>
+            <li class="nav_comp" ><a href="index.html">Today</a></li>
             <li class="nav_comp" ><a href="weth_hr_data.html">Hourly</a></li>
             <li class="nav_comp" >10 Day</li>
             <li class="nav_comp" >Weekend</li>
